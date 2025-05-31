@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c3f80bba8ab304f6a920053d38ad42c9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Demo/Animations/Pre Made Menu.controller
+  uploadId: 746445

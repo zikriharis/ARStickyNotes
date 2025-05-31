@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c5514a206694347a9ba6f67a1ad1ff6f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Demo/Scripts/ScaleAnimation.cs
+  uploadId: 746445

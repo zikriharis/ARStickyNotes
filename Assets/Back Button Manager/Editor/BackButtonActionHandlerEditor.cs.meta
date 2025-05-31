@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 236f6280ecad4f089092e4debbfd8db5
+timeCreated: 1741949658
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Editor/BackButtonActionHandlerEditor.cs
+  uploadId: 746445

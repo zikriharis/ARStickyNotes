@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 204bb94015e4a43218fdeca3a01084aa
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Demo/Animations/Game Play Menu.controller
+  uploadId: 746445

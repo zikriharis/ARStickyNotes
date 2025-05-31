@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3d47868503ccf47b3bba75bc98639ac6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Prefabs/Back Button Manager.prefab
+  uploadId: 746445

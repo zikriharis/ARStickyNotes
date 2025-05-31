@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 5082fdc37d53444f8e597c63260bfcce
+timeCreated: 1742890252
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/ApplicationPauseControl.cs
+  uploadId: 746445

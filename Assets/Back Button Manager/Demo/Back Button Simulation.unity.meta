@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3a00d1ea1d9cb4e04bbd447086d0da10
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Demo/Back Button Simulation.unity
+  uploadId: 746445

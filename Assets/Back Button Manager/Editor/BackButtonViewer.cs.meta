@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: d3bae0ca624c4a0995c9c3700542312b
+timeCreated: 1742307510
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315060
+  packageName: Android Back Button Manager
+  packageVersion: 1.0
+  assetPath: Assets/Back Button Manager/Editor/BackButtonViewer.cs
+  uploadId: 746445
