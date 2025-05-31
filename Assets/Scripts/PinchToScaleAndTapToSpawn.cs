@@ -88,15 +88,8 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
                 return;
 
             // Block if tap is on any UI (sticky note or otherwise)
-            if (EventSystem.current != null)
-            {
-                PointerEventData eventData = new PointerEventData(EventSystem.current);
-                eventData.position = touch.position;
-                var results = new System.Collections.Generic.List<RaycastResult>();
-                EventSystem.current.RaycastAll(eventData, results);
-                if (results.Count > 0)
-                    return; // Tap is on UI, don't spawn on board
-            }
+            if (IsPointerOverUI(touch))
+                return; // Tap is on UI, don't spawn on board
 
             if (touch.phase == TouchPhase.Began)
             {
@@ -137,6 +130,20 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
         return false;
     }
 
+    // UI filter to prevent interaction when pointer is over UI
+    private bool IsPointerOverUI(Touch touch)
+    {
+        if (EventSystem.current != null)
+        {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            return EventSystem.current.IsPointerOverGameObject(touch.fingerId);
+#else
+            return EventSystem.current.IsPointerOverGameObject();
+#endif
+        }
+        return false;
+    }
+
     // Spawns sticky note at the world position with a small offset above the board
     private void SpawnStickyNoteAtWorldPosition(Vector3 worldPosition, Vector3 surfaceNormal)
     {
@@ -162,7 +169,7 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
         }
 
         // Optionally, parent the sticky note to the board for organization
-        // stickyNote.transform.SetParent(transform);
+        //stickyNote.transform.SetParent(transform);
     }
 
     // Call this method when hiding a sticky note or confirming/cancelling a popup

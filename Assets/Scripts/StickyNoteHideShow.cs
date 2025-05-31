@@ -12,7 +12,7 @@ public class StickyNoteHideShow : MonoBehaviour
     public Color greyedOutColor = new Color(0.7f, 0.7f, 0.7f, 1f);
 
     [Header("Reference to board script for tap cooldown")]
-    public PinchToScaleAndTapToSpawn boardScript; // <-- Add this
+    public PinchToScaleAndTapToSpawn boardScript;
 
     private Color assignedColor = Color.yellow;
     private bool isHidden = false;
@@ -20,7 +20,6 @@ public class StickyNoteHideShow : MonoBehaviour
 
     void Awake()
     {
-        // ... (same as before, no changes needed) ...
         if (hideToggle == null)
         {
             Transform showHideToggle = transform.Find("Canvas/Show/Hide Toggle");
@@ -45,7 +44,7 @@ public class StickyNoteHideShow : MonoBehaviour
 
     void Start()
     {
-        // ... (same as before) ...
+        // Subscribe to the Boolean event of your custom toggle component
         if (hideToggle != null)
         {
             var eventField = hideToggle.GetType().GetField("onValueChanged");
@@ -55,6 +54,7 @@ public class StickyNoteHideShow : MonoBehaviour
                 if (evt != null)
                 {
                     evt.AddListener(OnHideToggleChanged);
+                    // Also set initial state
                     var valueProp = hideToggle.GetType().GetProperty("Value");
                     if (valueProp != null)
                     {
@@ -75,6 +75,17 @@ public class StickyNoteHideShow : MonoBehaviour
 
         if (noteBackground != null)
             assignedColor = noteBackground.color;
+
+        // Register this sticky note with the ShowAll manager
+        if (StickyNoteShowAllToggle.Instance != null)
+            StickyNoteShowAllToggle.Instance.RegisterStickyNote(this);
+    }
+
+    void OnDestroy()
+    {
+        // Unregister from ShowAll manager
+        if (StickyNoteShowAllToggle.Instance != null)
+            StickyNoteShowAllToggle.Instance.UnregisterStickyNote(this);
     }
 
     public void OnHideToggleChanged(bool isOn)
@@ -82,7 +93,6 @@ public class StickyNoteHideShow : MonoBehaviour
         isHidden = isOn;
         UpdateVisual();
 
-        // --- ADD THIS: Notify board to start cooldown ---
         if (boardScript != null)
             boardScript.OnStickyNoteHideOrPopup();
     }
@@ -133,7 +143,6 @@ public class StickyNoteHideShow : MonoBehaviour
         }
     }
 
-    // --- ADD THIS: Call from popup confirmation/cancel buttons ---
     public void OnPopupClosed()
     {
         if (boardScript != null)
