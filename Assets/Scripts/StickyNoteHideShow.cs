@@ -11,16 +11,18 @@ public class StickyNoteHideShow : MonoBehaviour
     [Header("Greyed out color for Show All mode")]
     public Color greyedOutColor = new Color(0.7f, 0.7f, 0.7f, 1f);
 
+    [Header("Reference to board script for tap cooldown")]
+    public PinchToScaleAndTapToSpawn boardScript; // <-- Add this
+
     private Color assignedColor = Color.yellow;
     private bool isHidden = false;
     private bool isShowAllMode = false;
 
     void Awake()
     {
-        // Auto-assign hideToggle if not set
+        // ... (same as before, no changes needed) ...
         if (hideToggle == null)
         {
-            // Look for the first MonoBehaviour in children named "Show/Hide Toggle"
             Transform showHideToggle = transform.Find("Canvas/Show/Hide Toggle");
             if (showHideToggle != null)
                 hideToggle = showHideToggle.GetComponent<MonoBehaviour>();
@@ -28,7 +30,6 @@ public class StickyNoteHideShow : MonoBehaviour
                 hideToggle = GetComponentInChildren<MonoBehaviour>(true);
         }
 
-        // Auto-assign noteBackground if not set
         if (noteBackground == null)
         {
             Transform bg = transform.Find("Canvas/NoteBackground");
@@ -38,25 +39,22 @@ public class StickyNoteHideShow : MonoBehaviour
                 noteBackground = GetComponentInChildren<Image>(true);
         }
 
-        // Auto-assign the sticky note root if not set
         if (stickyNoteRoot == null)
             stickyNoteRoot = this.gameObject;
     }
 
     void Start()
     {
-        // Subscribe to the Boolean event of your custom toggle component
+        // ... (same as before) ...
         if (hideToggle != null)
         {
-            // Use reflection to add a listener to the "onValueChanged" UnityEvent<bool>
             var eventField = hideToggle.GetType().GetField("onValueChanged");
             if (eventField != null)
             {
                 var evt = eventField.GetValue(hideToggle) as UnityEngine.Events.UnityEvent<bool>;
                 if (evt != null)
                 {
-                    evt.AddListener(OnHideToggleChanged); // <-- FIXED HERE
-                    // Also set initial state
+                    evt.AddListener(OnHideToggleChanged);
                     var valueProp = hideToggle.GetType().GetProperty("Value");
                     if (valueProp != null)
                     {
@@ -83,6 +81,10 @@ public class StickyNoteHideShow : MonoBehaviour
     {
         isHidden = isOn;
         UpdateVisual();
+
+        // --- ADD THIS: Notify board to start cooldown ---
+        if (boardScript != null)
+            boardScript.OnStickyNoteHideOrPopup();
     }
 
     public void SetNoteColor(Color color)
@@ -129,5 +131,12 @@ public class StickyNoteHideShow : MonoBehaviour
         {
             ui.interactable = interactable;
         }
+    }
+
+    // --- ADD THIS: Call from popup confirmation/cancel buttons ---
+    public void OnPopupClosed()
+    {
+        if (boardScript != null)
+            boardScript.OnStickyNoteHideOrPopup();
     }
 }

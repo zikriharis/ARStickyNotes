@@ -21,7 +21,12 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
 
     // Tap cooldown variables
     private float lastHideTime = -10f;
-    public float hideCooldown = 0.3f;
+    public float hideCooldown = 1.0f; // Increased cooldown
+
+    // Tap-and-hold variables
+    private bool isTouching = false;
+    private float touchStartTime = 0f;
+    public float spawnHoldDuration = 0.5f; // Hold at least 0.5s to spawn
 
     void Start()
     {
@@ -66,7 +71,6 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
                 // Y remains as set in inspector
                 transform.localScale = new Vector3(newX, initialScale.y, newZ);
             }
-
         }
         else if (isScaling)
         {
@@ -74,37 +78,52 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
             if (outline != null) outline.DisableOutline();
         }
 
-        // Tap to spawn sticky note logic (single touch)
+        // Tap-and-hold to spawn sticky note logic (single touch)
         if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
-            // Only proceed if this is a quick tap (TouchPhase.Ended)
-            if (touch.phase == TouchPhase.Ended && !isScaling)
+
+            // Block tap if just hid a sticky note or confirmed/cancelled popup
+            if (Time.time - lastHideTime < hideCooldown)
+                return;
+
+            // Block if tap is on any UI (sticky note or otherwise)
+            if (EventSystem.current != null)
             {
-                // Block tap if just hid a sticky note
-                if (Time.time - lastHideTime < hideCooldown)
-                    return;
+                PointerEventData eventData = new PointerEventData(EventSystem.current);
+                eventData.position = touch.position;
+                var results = new System.Collections.Generic.List<RaycastResult>();
+                EventSystem.current.RaycastAll(eventData, results);
+                if (results.Count > 0)
+                    return; // Tap is on UI, don't spawn on board
+            }
 
-                // Block if tap is on any UI (sticky note or otherwise)
-                if (EventSystem.current != null)
-                {
-                    PointerEventData eventData = new PointerEventData(EventSystem.current);
-                    eventData.position = touch.position;
-                    var results = new System.Collections.Generic.List<RaycastResult>();
-                    EventSystem.current.RaycastAll(eventData, results);
-                    if (results.Count > 0)
-                        return; // Tap is on UI, don't spawn on board
-                }
+            if (touch.phase == TouchPhase.Began)
+            {
+                isTouching = true;
+                touchStartTime = Time.time;
+            }
+            else if (touch.phase == TouchPhase.Ended && isTouching)
+            {
+                float heldTime = Time.time - touchStartTime;
+                isTouching = false;
 
-                Ray ray = mainCamera.ScreenPointToRay(touch.position);
-                if (Physics.Raycast(ray, out RaycastHit hit))
+                if (heldTime >= spawnHoldDuration)
                 {
-                    if (hit.transform == transform)
+                    Ray ray = mainCamera.ScreenPointToRay(touch.position);
+                    if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        SpawnStickyNoteAtWorldPosition(hit.point, hit.normal);
+                        if (hit.transform == transform)
+                        {
+                            SpawnStickyNoteAtWorldPosition(hit.point, hit.normal);
+                        }
                     }
                 }
             }
+        }
+        else
+        {
+            isTouching = false;
         }
     }
 
@@ -135,12 +154,19 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(surfaceNormal) * Quaternion.Euler(0, 180, 0);
         GameObject stickyNote = Instantiate(stickyNotePrefab, spawnPos, rotation);
 
+        // Assign the boardScript reference to the new sticky note
+        StickyNoteHideShow stickyScript = stickyNote.GetComponent<StickyNoteHideShow>();
+        if (stickyScript != null)
+        {
+            stickyScript.boardScript = this;
+        }
+
         // Optionally, parent the sticky note to the board for organization
         // stickyNote.transform.SetParent(transform);
     }
 
-    // Call this method when hiding a sticky note (e.g., from your show/hide button)
-    public void OnStickyNoteHide()
+    // Call this method when hiding a sticky note or confirming/cancelling a popup
+    public void OnStickyNoteHideOrPopup()
     {
         lastHideTime = Time.time;
     }

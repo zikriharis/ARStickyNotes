@@ -550,6 +550,8 @@ MonoBehaviour:
   maxScale: 6
   stickyNotePrefab: {fileID: 576199639203302809, guid: 92c905f95ca52cb409ec8f33468e55f2, type: 3}
   spawnOffset: 0.07
+  hideCooldown: 0.3
+  spawnHoldDuration: 0.5
 --- !u!1 &799555863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,6 +1480,10 @@ PrefabInstance:
       propertyPath: m_CullTransparentMesh
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8162131580847661972, guid: 78f96c4cdea0cf645b70fd727dfec352, type: 3}
+      propertyPath: boardScript
+      value: 
+      objectReference: {fileID: 782628391}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

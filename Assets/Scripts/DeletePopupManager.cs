@@ -7,6 +7,9 @@ public class DeletePopupManager : MonoBehaviour
     public Button confirmButton;
     public Button cancelButton;
 
+    [Header("Reference to the board script for tap cooldown")]
+    public PinchToScaleAndTapToSpawn boardScript; // Assign this in inspector or at runtime
+
     private GameObject targetToDelete;
 
     public void ShowPopup(GameObject target)
@@ -26,12 +29,20 @@ public class DeletePopupManager : MonoBehaviour
                 targetToDelete = null;
             }
             popupPanel.SetActive(false);
+
+            // Notify board to start tap cooldown
+            if (boardScript != null)
+                boardScript.OnStickyNoteHideOrPopup();
         });
 
         cancelButton.onClick.AddListener(() =>
         {
             targetToDelete = null;
             popupPanel.SetActive(false);
+
+            // Notify board to start tap cooldown
+            if (boardScript != null)
+                boardScript.OnStickyNoteHideOrPopup();
         });
     }
 }
