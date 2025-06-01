@@ -8,8 +8,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform))]
 public class StickyNoteOutline : MonoBehaviour
 {
+    [Header("Outline Appearance")]
     public Color outlineColor = Color.yellow;
     public float outlineWidth = 4f;
+    public Material outlineMaterial; // Assign in Inspector if needed (optional)
+    public Sprite outlineSprite;     // Assign in Inspector for custom outline shape (optional)
 
     private GameObject outlineObj;
     private Image outlineImg;
@@ -41,10 +44,14 @@ public class StickyNoteOutline : MonoBehaviour
 
             outlineImg = outlineObj.AddComponent<Image>();
             outlineImg.raycastTarget = false;
-            outlineImg.color = outlineColor;
 
-            // Set as transparent
-            outlineImg.sprite = null; // fallback to default
+            // Assign material and sprite if provided
+            if (outlineMaterial != null)
+                outlineImg.material = outlineMaterial;
+            if (outlineSprite != null)
+                outlineImg.sprite = outlineSprite;
+
+            outlineImg.color = outlineColor;
 
             RectTransform outlineRect = outlineObj.GetComponent<RectTransform>();
             RectTransform thisRect = GetComponent<RectTransform>();
@@ -58,11 +65,16 @@ public class StickyNoteOutline : MonoBehaviour
         {
             outlineObj.SetActive(true);
         }
-        // Update color and size in case properties changed
+
+        // Update color, material, sprite, and size in case properties changed
         if (outlineImg != null)
         {
             outlineImg.color = outlineColor;
             outlineImg.raycastTarget = false;
+            if (outlineMaterial != null)
+                outlineImg.material = outlineMaterial;
+            if (outlineSprite != null)
+                outlineImg.sprite = outlineSprite;
         }
         RectTransform outlineRect2 = outlineObj.GetComponent<RectTransform>();
         RectTransform thisRect2 = GetComponent<RectTransform>();
