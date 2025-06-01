@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHandler,IEndDragHandler, IInitializePotentialDragHandler
+public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IInitializePotentialDragHandler
 {
     [SerializeField] RectTransform picker;
     [SerializeField] Image pickedColorImage;
@@ -11,21 +11,24 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
     [SerializeField] int totalNumberofColors = 24;
     [SerializeField] int wheelsCount = 2;
     [SerializeField]
-    [Range(0,360)]
+    [Range(0, 360)]
     [Tooltip("clockwise angle of the begnning point starting from positive x-axis")]
     float startingAngle = 0;
-    [SerializeField] [InspectorName("Control Sat & Val")] bool controlSV = false;
+    [SerializeField][InspectorName("Control Sat & Val")] bool controlSV = false;
     [SerializeField] bool inertia = true;
     [SerializeField] float decelerationRate = 0.135f;
     [SerializeField] bool wholeSegment = false;
 
     [Header("Limits")]
-    [SerializeField] [Range(0.5f, 0.001f)] float minimumSatValStep = 0.01f;
-    [SerializeField] [Range(0,1)] float minimumSaturation = 0.25f;
-    [SerializeField] [Range(0, 1)] float maximumSaturation = 1;
-    [SerializeField] [Range(0, 1)] float minimumValue = 0.25f;
-    [SerializeField] [Range(0, 1)] float maximumValue = 1;
-    
+    [SerializeField][Range(0.5f, 0.001f)] float minimumSatValStep = 0.01f;
+    [SerializeField][Range(0, 1)] float minimumSaturation = 0.25f;
+    [SerializeField][Range(0, 1)] float maximumSaturation = 1;
+    [SerializeField][Range(0, 1)] float minimumValue = 0.25f;
+    [SerializeField][Range(0, 1)] float maximumValue = 1;
+
+    [Header("Responsiveness")]
+    [SerializeField] float responsivenessMultiplier = 1.0f;
+
     //dragging variables
     bool dragging = false;
     float satValAmount = 1;
@@ -36,14 +39,15 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
     float previousDiscretedH;
     float sat = 1, val = 1;
     Color selectedColor;
-    public Color SelectedColor {
+    public Color SelectedColor
+    {
         get
         {
             return selectedColor;
         }
         private set
         {
-            if(value!=selectedColor)
+            if (value != selectedColor)
             {
                 selectedColor = value;
                 OnColorChange?.Invoke(SelectedColor);
@@ -57,7 +61,7 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
         set
         {
             float newVal = Mathf.Clamp(value, minimumValue, maximumValue);
-            if(Mathf.Abs(val- newVal) > minimumSatValStep)
+            if (Mathf.Abs(val - newVal) > minimumSatValStep)
             {
                 val = newVal;
                 UpdateMaterial();
@@ -93,7 +97,7 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
     void UpdateMaterialInitialValues()
     {
         colorWheelMat.SetFloat("_StartingAngle", startingAngle);
-        colorWheelMat.SetInt("_ColorsCount" , totalNumberofColors);
+        colorWheelMat.SetInt("_ColorsCount", totalNumberofColors);
         colorWheelMat.SetInt("_WheelsCount", wheelsCount);
 
     }
@@ -105,7 +109,7 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
     void CalculatePresets()
     {
         //Assuming the canvas is ScreenSpace-Overlay
-        centerPoint=RectTransformUtility.WorldToScreenPoint(null, transform.position);
+        centerPoint = RectTransformUtility.WorldToScreenPoint(null, transform.position);
         RectTransform rect = GetComponent<RectTransform>();
         paletteRadius = rect.sizeDelta.x / 2;
         Vector3 pickerLocalPosition = picker.localPosition;
@@ -124,11 +128,11 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
     /// </param>
     public void CalculateSaturationAndValue(float amount)
     {
-       
-        if(amount>1)
+
+        if (amount > 1)
         {
             val = 1;
-            sat = 2-amount ;
+            sat = 2 - amount;
         }
         else
         {
@@ -166,18 +170,18 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
     }
     public void UpdateColor()
     {
-        
+
         float shiftedH = (pickerHueOffset + startingAngle / 360.0f + Hue % wheelsCount) / wheelsCount;
         shiftedH = shiftedH % 1.0f;
-        float discretedH = ((int)(shiftedH * totalNumberofColors)) / (1.0f* (totalNumberofColors-1));
+        float discretedH = ((int)(shiftedH * totalNumberofColors)) / (1.0f * (totalNumberofColors - 1));
         Color color;
-        if (shiftedH > 1 - 1.0 / totalNumberofColors  && shiftedH <= 1)//for gray
+        if (shiftedH > 1 - 1.0 / totalNumberofColors && shiftedH <= 1)//for gray
             color = Color.HSVToRGB(0, 0, (val - sat + 0.75f) / 1.5f);
         else
             color = Color.HSVToRGB(discretedH, sat, val);
         if (previousDiscretedH != discretedH)
             OnHueChange?.Invoke(discretedH);
-        if(pickedColorImage) pickedColorImage.color = color;
+        if (pickedColorImage) pickedColorImage.color = color;
         SelectedColor = color;
         previousDiscretedH = discretedH;
     }
@@ -192,25 +196,25 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
         Vector2 dragVec = eventData.delta;
         Vector2 currentPos = eventData.position;
         Vector2 prevPos = currentPos - dragVec;
-        
+
         //calculate Saturation and Value change
         if (controlSV)
         {
             float r1 = Vector2.Distance(centerPoint, prevPos);
             float r2 = Vector2.Distance(centerPoint, currentPos);
             float dr = r2 - r1;
-            satValAmount += dr / paletteRadius;
+            satValAmount += (dr / paletteRadius) * responsivenessMultiplier;
             satValAmount = Mathf.Clamp(satValAmount, 0, 2);
             CalculateSaturationAndValue(satValAmount);
         }
 
         //calculate Hue change
-        float dtheta = Vector2.SignedAngle(currentPos - centerPoint,prevPos - centerPoint);
+        float dtheta = Vector2.SignedAngle(currentPos - centerPoint, prevPos - centerPoint);
         theta += dtheta;
 
         Hue += dtheta / 360;
         if (Hue < 0) Hue += wheelsCount;
-        
+
         UpdateHue();
 
     }
@@ -256,7 +260,7 @@ public class ColorPaletteController : MonoBehaviour, IBeginDragHandler, IDragHan
 }
 [System.Serializable]
 public class ColorChangeEvent : UnityEvent<Color>
-{}
+{ }
 [System.Serializable]
 public class HueChangeEvent : UnityEvent<float>
 { }

@@ -1,0 +1,4 @@
+repository "ARStickyNotesVuforia/ARStickyNotesVuforia@18968270463874@cloud"
+  path "/"
+    br "/main"
+    co "/main"
