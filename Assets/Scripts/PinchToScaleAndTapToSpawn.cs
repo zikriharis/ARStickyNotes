@@ -32,6 +32,7 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
     [Tooltip("Margin to keep sticky notes away from board edge during resize, spawn, and dragging.")]
     public float stickyNoteMargin = 0.02f;
 
+   
     // Private state
     private float initialDistance;
     private Vector3 initialScale;
@@ -241,7 +242,9 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
         // Optional: assign reference to board script, if your sticky notes use it
         var stickyScript = stickyNote.GetComponent<StickyNoteHideShow>();
         if (stickyScript != null)
+        {
             stickyScript.boardScript = this;
+        }
     }
 
     /// <summary>

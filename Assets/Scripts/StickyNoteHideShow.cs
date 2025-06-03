@@ -7,6 +7,7 @@ public class StickyNoteHideShow : MonoBehaviour
     public MonoBehaviour hideToggle;      // Assign your UISwitcherComplete component here
     public Image noteBackground;          // The main background image for greying out
     public GameObject stickyNoteRoot;     // The root GameObject for the sticky note
+    public GameObject colorPaletteRoot;
 
     [Header("Greyed out color for Show All mode")]
     public Color greyedOutColor = new Color(0.7f, 0.7f, 0.7f, 1f);
@@ -14,7 +15,7 @@ public class StickyNoteHideShow : MonoBehaviour
     [Header("Reference to board script for tap cooldown")]
     public PinchToScaleAndTapToSpawn boardScript;
 
-    private Color assignedColor = Color.yellow;
+    private Color assignedColor;
     private bool isHidden = false;
     private bool isShowAllMode = false;
 
@@ -40,6 +41,10 @@ public class StickyNoteHideShow : MonoBehaviour
 
         if (stickyNoteRoot == null)
             stickyNoteRoot = this.gameObject;
+
+        // Initialize assignedColor to the initial color of the note background (as set in Inspector or prefab)
+        if (noteBackground != null)
+            assignedColor = noteBackground.color;
     }
 
     void Start()
@@ -73,9 +78,6 @@ public class StickyNoteHideShow : MonoBehaviour
             }
         }
 
-        if (noteBackground != null)
-            assignedColor = noteBackground.color;
-
         // Register this sticky note with the ShowAll manager
         if (StickyNoteShowAllToggle.Instance != null)
             StickyNoteShowAllToggle.Instance.RegisterStickyNote(this);
@@ -97,12 +99,20 @@ public class StickyNoteHideShow : MonoBehaviour
             boardScript.OnStickyNoteHideOrPopup();
     }
 
+    /// <summary>
+    /// Call this when the user picks a new color for the note (e.g., from a color picker UI).
+    /// This sets the persistent color and updates the UI.
+    /// </summary>
     public void SetNoteColor(Color color)
     {
         assignedColor = color;
         UpdateVisual();
     }
 
+    /// <summary>
+    /// Call this to update the visual appearance of the note, including color.
+    /// Always uses assignedColor except when greyed out for show-all mode.
+    /// </summary>
     public void UpdateVisual()
     {
         if (isShowAllMode)
