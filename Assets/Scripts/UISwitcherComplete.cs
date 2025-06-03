@@ -43,7 +43,7 @@ namespace UISwitcherComplete
             SetAnchors(_max);
             backgroundColor = onColor;
             if (priorityText != null)
-                priorityText.text = "Show Hidden"; // Set text
+                priorityText.text = "Complete"; // Set text
         }
 
         private void SetOff()
@@ -51,7 +51,7 @@ namespace UISwitcherComplete
             SetAnchors(_min);
             backgroundColor = offColor;
             if (priorityText != null)
-                priorityText.text = "Hide Mode"; // Set text
+                priorityText.text = "Incomplete"; // Set text
         }
 
         private void SetNull()

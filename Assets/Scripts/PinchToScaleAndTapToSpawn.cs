@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -7,7 +7,6 @@ using System.Collections.Generic;
 /// Attach this script to your 3D board GameObject.
 /// - Pinch to scale the board (with boundary logic to keep notes on the board and margin).
 /// - Tap-and-hold to spawn sticky notes, clamping so notes never spawn out of bounds (with margin).
-/// - Sticky notes are draggable only within the board boundary (with margin), and move to top when dragging.
 /// </summary>
 public class PinchToScaleAndTapToSpawn : MonoBehaviour
 {
@@ -111,7 +110,7 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
             if (Time.time - lastHideTime < hideCooldown)
                 return;
 
-            if (IsPointerOverUI(touch))
+            if (IsPointerOverUI(touch) || IsTouchOnStickyNote(touch))
                 return;
 
             if (touch.phase == TouchPhase.Began)
@@ -226,14 +225,18 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
         canvasLocalPos.y = Mathf.Clamp(canvasLocalPos.y, -allowedHalfHeight, allowedHalfHeight);
 
         GameObject stickyNote = Instantiate(stickyNotePrefab, stickyNotesCanvas);
+        stickyNote.hideFlags = HideFlags.None;
+        stickyNote.name = "StickyNote";
         RectTransform noteRect = stickyNote.GetComponent<RectTransform>();
         noteRect.anchoredPosition = canvasLocalPos;
         noteRect.localRotation = Quaternion.Euler(stickyNoteSpawnRotation);
         noteRect.localScale = stickyNoteSpawnScale;
 
         // Add drag handler if not already present
-        if (stickyNote.GetComponent<StickyNoteDragHandler>() == null)
-            stickyNote.AddComponent<StickyNoteDragHandler>().Init(stickyNotesCanvas, stickyNoteMargin);
+        var dragHandler = stickyNote.GetComponent<StickyNoteDragHandler>();
+        if (dragHandler == null)
+            dragHandler = stickyNote.AddComponent<StickyNoteDragHandler>();
+        dragHandler.Init(stickyNotesCanvas, stickyNoteMargin);
 
         // Optional: assign reference to board script, if your sticky notes use it
         var stickyScript = stickyNote.GetComponent<StickyNoteHideShow>();
@@ -266,79 +269,19 @@ public class PinchToScaleAndTapToSpawn : MonoBehaviour
     {
         lastHideTime = Time.time;
     }
-}
-
-/// <summary>
-/// Drag handler for sticky notes: restricts dragging to within the board boundary (with margin), moves note to top while dragging, and shows an outline while dragging.
-/// </summary>
-[RequireComponent(typeof(RectTransform))]
-public class StickyNoteDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
-{
-    private RectTransform noteRect;
-    private RectTransform boardRect;
-    private Vector2 offset;
-    private float margin = 0.02f;
-    private StickyNoteOutline outline;
-
-    public void Init(RectTransform boardCanvasRect, float stickyNoteMargin)
+    private bool IsTouchOnStickyNote(Touch touch)
     {
-        boardRect = boardCanvasRect;
-        margin = stickyNoteMargin;
-        // Add StickyNoteOutline if not already present
-        outline = GetComponent<StickyNoteOutline>();
-        if (outline == null)
-            outline = gameObject.AddComponent<StickyNoteOutline>();
-        outline.enabled = false;
-    }
+        PointerEventData pointerData = new PointerEventData(EventSystem.current);
+        pointerData.position = touch.position;
 
-    void Awake()
-    {
-        noteRect = GetComponent<RectTransform>();
-        outline = GetComponent<StickyNoteOutline>();
-        if (outline != null)
-            outline.enabled = false;
-    }
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (noteRect == null) noteRect = GetComponent<RectTransform>();
-        noteRect.SetAsLastSibling();
-
-        // Calculate pointer offset from note center
-        Vector2 localPoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(noteRect, eventData.position, eventData.pressEventCamera, out localPoint);
-        offset = noteRect.anchoredPosition - localPoint;
-
-        // Enable outline during drag
-        if (outline == null)
-            outline = gameObject.AddComponent<StickyNoteOutline>();
-        outline.enabled = true;
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        Vector2 localPoint;
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(boardRect, eventData.position, eventData.pressEventCamera, out localPoint))
+        foreach (var result in results)
         {
-            Vector2 newAnchoredPos = localPoint + offset;
-
-            // Clamp so sticky note stays on board, with margin
-            Vector2 halfBoard = new Vector2(boardRect.rect.width, boardRect.rect.height) * 0.5f;
-            Vector2 halfNote = Vector2.Scale(noteRect.rect.size, noteRect.localScale) * 0.5f;
-            float allowedHalfWidth = halfBoard.x - halfNote.x - margin;
-            float allowedHalfHeight = halfBoard.y - halfNote.y - margin;
-
-            newAnchoredPos.x = Mathf.Clamp(newAnchoredPos.x, -allowedHalfWidth, allowedHalfWidth);
-            newAnchoredPos.y = Mathf.Clamp(newAnchoredPos.y, -allowedHalfHeight, allowedHalfHeight);
-
-            noteRect.anchoredPosition = newAnchoredPos;
+            if (result.gameObject.CompareTag("StickyNote"))
+                return true;
         }
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        // Disable outline after drag
-        if (outline != null)
-            outline.enabled = false;
+        return false;
     }
 }

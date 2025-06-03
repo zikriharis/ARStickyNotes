@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "172111315916",
+    "firebase_url": "https://arstickynotes-c260c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "arstickynotes-c260c",
+    "storage_bucket": "arstickynotes-c260c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172111315916:android:732be1d661dd2d27ca9369",
+        "android_client_info": {
+          "package_name": "com.firebase.arstickynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyGDPtOOp6ltelYzytXmR-rI3bwg79KYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172111315916:android:67433dcd4d827b56ca9369",
+        "android_client_info": {
+          "package_name": "com.group.arstickynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyGDPtOOp6ltelYzytXmR-rI3bwg79KYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

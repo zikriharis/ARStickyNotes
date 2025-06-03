@@ -259,11 +259,13 @@ GameObject:
   - component: {fileID: 671213795789248730}
   - component: {fileID: 1419142644199874299}
   - component: {fileID: 7833385518018153575}
-  - component: {fileID: 4589161109028120479}
   - component: {fileID: 303727629466869574}
+  - component: {fileID: 6512182815578317141}
+  - component: {fileID: 5769663607707476316}
+  - component: {fileID: 2336105495848710860}
   m_Layer: 0
   m_Name: StickyNote VariantLatest
-  m_TagString: Untagged
+  m_TagString: StickyNote
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -320,22 +322,6 @@ MonoBehaviour:
   stickyNoteRoot: {fileID: 576199639203302809}
   greyedOutColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
   boardScript: {fileID: 0}
---- !u!114 &4589161109028120479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576199639203302809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ca7dd55ea299914489c0e91df713063, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  outlineWidth: 1
-  outlineMaterial: {fileID: 2100000, guid: 34166599be8835f4b924991fa28cbe6c, type: 2}
-  outlineSprite: {fileID: 0}
 --- !u!114 &303727629466869574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,6 +339,56 @@ MonoBehaviour:
   expandIcon: {fileID: 1969811215807414831}
   expandSprite: {fileID: 21300000, guid: c5654ea955fc8e14381d681e6b114fb7, type: 3}
   collapseSprite: {fileID: 21300000, guid: 8d66b4bd8c9b91a4882a7f08a72a152c, type: 3}
+--- !u!222 &6512182815578317141
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576199639203302809}
+  m_CullTransparentMesh: 1
+--- !u!114 &5769663607707476316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576199639203302809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2336105495848710860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576199639203302809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425cad2ddfb6f4741ae57a98f56c0005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1063581658665762397
 GameObject:
   m_ObjectHideFlags: 0

@@ -128,9 +128,33 @@ PrefabInstance:
     m_TransformParent: {fileID: 1023653577}
     m_Modifications:
     - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
+      propertyPath: hideCooldown
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
+      propertyPath: stickyNoteMargin
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
+      propertyPath: spawnHoldDuration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
       propertyPath: stickyNotesCanvas
       value: 
       objectReference: {fileID: 573240878}
+    - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
+      propertyPath: stickyNoteSpawnScale.x
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
+      propertyPath: stickyNoteSpawnScale.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789652192652303575, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
+      propertyPath: stickyNoteSpawnScale.z
+      value: 0.001
+      objectReference: {fileID: 0}
     - target: {fileID: 4500707251994642806, guid: db9dba62d795f614f970a7a28ce6364a, type: 3}
       propertyPath: m_Name
       value: StickyNoteBoard
